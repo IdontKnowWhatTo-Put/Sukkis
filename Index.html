@@ -1,0 +1,72 @@
+<DOCTYPE="html">
+  <head>
+    <style>
+      div {
+        position: absolute;
+        top: 10%;
+        width: 50%;
+        min-height: 90%;
+      }
+      .original {
+        left: 0;
+      }
+      #sorted {
+        left: 50%;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Sukkamurhaaja sekoitin</h2>
+    <button id="add">Lisää osanottaja</button>
+   <button id="sort">Suorita sekoitus</button>
+   <button id="save">Tallenna</button>
+   <input type="text" id="haku">
+    <div><p id="original"></p></div>
+    <div id="sorted"></div>
+    <p id="guy"></p>
+  </body>
+  <script>
+    //if(localStorage.getItem)
+    dict = JSON.parse(localStorage.getItem(1))
+    
+    document.getElementById('add').onclick = () => {document.getElementById('original').innerText += prompt('Added value') + '\n'
+      document.querySelector('div').style.visibility = 'visible'
+    }
+    
+    document.getElementById('sort').onclick = () => {
+      list = document.getElementById('original').innerText.split('\n').slice(0, -1)
+      listCopy = JSON.parse(JSON.stringify(list))
+        randList = []
+        while(list.length > 0){
+          num = Math.floor(Math.random()*list.length)
+          randList.push(list.splice(num, 1))
+        }
+        newList = randList.slice(1).concat(randList.slice(0, 1))
+        //console.log(num)
+      text = ''
+      for(i = 0; i < newList.length; i++){
+        text += newList[i] + '\n'
+      }
+      dict = {}
+      randList.forEach((key, index) => {
+        dict[key] = newList[index]
+      })
+      console.log(dict)
+      document.querySelector('div').style.visibility = 'hidden'
+      
+      /*
+      document.getElementById('sorted').innerText = '\n' + text*/
+    }
+    document.getElementById('haku').oninput = () => {
+      if(Object.keys(dict).includes(document.getElementById('haku').value.toLowerCase())){
+        document.getElementById('guy').innerText = dict[document.getElementById('haku').value.toLowerCase()]}
+      else{
+        document.getElementById('guy').innerText = ''
+      }
+    }
+    
+    document.getElementById('save').onclick = () => {
+      localStorage.setItem(1, JSON.stringify(dict))
+    }
+  </script>
+</DOCTYPE>
