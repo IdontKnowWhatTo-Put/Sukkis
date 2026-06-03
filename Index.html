@@ -2,35 +2,53 @@
   <head>
     <style>
       div {
-        position: absolute;
+        position: relative;
         top: 10%;
         width: 50%;
         min-height: 90%;
       }
-      .original {
-        left: 0;
+      body {
+        font-size: 200%;
+      button {
+        width: 70%;
+        height: 20%;
+        font-size: 150%;
+        margin: -2rem;
+        z-index: 1;
+        position: relative;
+        display: inline-block;
       }
-      #sorted {
-        left: 50%;
+      input {
+        width: 70%;
+        height: 20%;
+        font-size: 100%;
+        position: relative;
+        display: inline-block;
+        margin: -2rem;
+        z-index: 1;
+        padding: 20%;
+        margin-top: 2rem;
+      }
+      p {
+        display: inline-block;
+        position: relative;
       }
     </style>
   </head>
   <body>
     <h2>Sukkamurhaaja sekoitin</h2>
-    <button id="add">Lisää osanottaja</button>
-   <button id="sort">Suorita sekoitus</button>
-   <button id="save">Tallenna</button>
-   <input type="text" id="haku">
+    <button id="add">Lisää osanottaja</button><br>
+   <button id="sort">Suorita sekoitus</button><br>
+   <button id="save">Tallenna</button><br>
+   <input type="text" id="haku"><br>
     <div><p id="original"></p></div>
-    <div id="sorted"></div>
-    <p id="guy"></p>
   </body>
   <script>
     //if(localStorage.getItem)
     dict = JSON.parse(localStorage.getItem(1))
     
     document.getElementById('add').onclick = () => {document.getElementById('original').innerText += prompt('Added value') + '\n'
-      document.querySelector('div').style.visibility = 'visible'
+      //document.querySelector('div').style.visibility = 'visible'
     }
     
     document.getElementById('sort').onclick = () => {
@@ -52,16 +70,16 @@
         dict[key] = newList[index]
       })
       console.log(dict)
-      document.querySelector('div').style.visibility = 'hidden'
+      //document.querySelector('div').style.visibility = 'hidden'
       
       /*
       document.getElementById('sorted').innerText = '\n' + text*/
     }
     document.getElementById('haku').oninput = () => {
       if(Object.keys(dict).includes(document.getElementById('haku').value.toLowerCase())){
-        document.getElementById('guy').innerText = dict[document.getElementById('haku').value.toLowerCase()]}
+        document.getElementById('original').innerText = dict[document.getElementById('haku').value.toLowerCase()]}
       else{
-        document.getElementById('guy').innerText = ''
+        document.getElementById('original').innerText = ''
       }
     }
     
