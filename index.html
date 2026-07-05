@@ -1,0 +1,128 @@
+<DOCTYPE="html">
+<html lang="fi">  
+<head>
+    <style>
+      :root {
+        overscroll-behavior-y: none;
+      }
+      .container {
+        position: absolute;
+        top: 10%;
+        left: 50%;
+        transform: translate(-50%, 0%);
+        background-color: lightgrey;
+        min-height: 100%;
+        width: 75%;
+        border-top-left-radius: 25px;
+        border-top-right-radius: 25px;
+        box-shadow: -5px -5px 25px;
+      }
+      button, input{
+        padding: 1%;
+        border-radius: 25px;
+        background-color: rgba(0, 0, 0, 0.3);
+        border: 0;
+        margin-bottom: 0.5%;
+      }
+      .container > *:not(.controls > *) {
+        text-align: center;
+      }
+      p, label, h2, button, input {
+        font-size: xx-large;
+      }
+    </style>
+  </head>
+  <body style="background-color: grey;">
+    <div class="container">
+    <h2>Sukkamurhaaja sekoitin</h2>
+    <div class="controls">
+    <button id="add">Lisää osanottaja</button><br>
+    <button id="del">Poista osanottaja</button><br>
+   <button id="save">Tallenna</button><br>
+   <button id="sort">Suorita sekoitus</button><br>
+   <label for="haku">Etsintä kenttä</label><br>
+   <input type="text" id="haku"><br>
+   </div>
+    <div><p id="original"></p></div>
+    </div>
+  </body>
+  <script>
+    if(localStorage.getItem(1) !== null || typeof(localStorage.getItem(1)) !== 'undefined'){
+    dict = JSON.parse(localStorage.getItem(1))}
+    if(localStorage.getItem(2) !== null || typeof(localStorage.getItem(2)) !== 'undefined'){
+      document.getElementById('original').innerText = localStorage.getItem(2)
+    }
+    if(dict == null){dict = undefined}
+    if(typeof(dict) == 'undefined'){document.getElementById('haku').disabled = true}
+    
+    document.getElementById('add').onclick = () => {
+      if(typeof(dict) !== 'undefined'){
+        if(confirm('tahdotko lisätä osanottajan, tämä tarkoittaa että tämänhetkinen järjestys tullaan nollaamaan')){
+        document.getElementById('original').innerText = Object.keys(dict).join('\n') + '\n'
+      document.getElementById('original').innerText += prompt('Osanottajan nimi') + '\n'
+      dict = undefined
+      document.getElementById('haku').disabled = true
+      }}
+      else{
+      document.getElementById('original').innerText += prompt('Osanottajan nimi') + '\n'}
+    }
+
+    document.getElementById('del').onclick = () => {
+      if(typeof(dict) !== 'undefined'){
+        removed = prompt('poistettava osanottaja')
+        //console.log(dict[removed])
+        //console.log()
+        dict[Object.keys(dict).find(key => dict[key] == removed)] = dict[removed]
+        delete dict[removed]
+
+    }
+      else{
+      document.getElementById('original').innerText = document.getElementById('original').innerText.replace(prompt('poistettavan osanottajan nimi') + '\n', '')
+    }}
+    
+    document.getElementById('sort').onclick = () => {
+      if(typeof(dict) !== 'undefined'){if(!confirm('tahdotko sekoittaa osanottajat uudestaan, tämä tulee nollaamaan tämänhetkisen järjestyksen')){return}}
+      if(typeof(dict) == 'undefined' || document.getElementById('original').innerText.split('\n').length-1 > 1){list = document.getElementById('original').innerText.toLowerCase().split('\n').slice(0, -1)}
+      else{list = Object.keys(dict), console.log(document.getElementById('original').innerText.split('\n').length-1)}
+      listCopy = JSON.parse(JSON.stringify(list))
+        randList = []
+        while(list.length > 0){
+          num = Math.floor(Math.random()*list.length)
+          randList.push(list.splice(num, 1))
+        }
+        newList = randList.slice(1).concat(randList.slice(0, 1))
+        //console.log(num)
+      text = ''
+      for(i = 0; i < newList.length; i++){
+        text += newList[i] + '\n'
+      }
+      dict = {}
+      randList.forEach((key, index) => {
+        dict[key] = newList[index]
+      })
+      document.getElementById('haku').disabled = false
+      document.getElementById('original').innerText = ''
+    }
+    document.getElementById('haku').oninput = () => {
+      //console.log(dict, Object.keys(dict), Object.keys(dict).includes(document.getElementById('haku').value.toLowerCase()), document.getElementById('haku').value.toLowerCase())
+      if(Object.keys(dict).includes(document.getElementById('haku').value.toLowerCase())){
+        document.getElementById('original').innerText = dict[document.getElementById('haku').value.toLowerCase()]}
+      else{
+        document.getElementById('original').innerText = ''
+      }
+    }
+    
+
+    document.getElementById('save').onclick = () => {
+      if(typeof(dict) !== 'undefined'){
+      localStorage.setItem(1, JSON.stringify(dict))
+        localStorage.removeItem(2)
+    }
+      else{
+        localStorage.setItem(2, document.getElementById('original').innerText)
+      localStorage.removeItem(1)
+      }
+    }
+  </script>
+</html>
+</DOCTYPE>
